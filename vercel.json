@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/",
+            "destination": "/rivera-dog-beds.html"
+        }
+    ]
+}
