@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.vercel/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Personal / non-project files
+brain.md
+GEMINI.md
+Skills.md
+*.heic
+*.rtf
+Debugging prompt.rtf
+publish-to-github-vercel*
+Personal Skills/
+
+# Other HTML projects (not this one)
+petit-berceau.html
+petit-berceau/
+
+# Lock files (optional but clean)
+package-lock.json
+package.json

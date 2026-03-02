@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rivera Custom Dog Beds — Handcrafted Wooden Crib-Style Dog Beds</title>
+    <meta name="description"
+        content="Handcrafted wooden dog beds built like baby cribs by Alejandro Rivera. Custom sizes, solid wood frames, slim mattress included. Find us on Facebook Marketplace." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Manrope:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3/src/index.js"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        /* ── TOKENS ── */
+        :root {
+            --bg: #EAE6DF;
+            --surface: #F4F1EB;
+            --ink: #1C1B1A;
+            --taupe: #827C75;
+            --terra: #A84B2B;
+            --oak: #C4A882;
+            --olive: #6B6B45;
+            --border: rgba(28, 27, 26, 0.1);
+            --shadow: 0 2px 24px rgba(28, 27, 26, 0.09);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── NOISE TEXTURE ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9997;
+            pointer-events: none;
+            opacity: 0.22;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 180px 180px;
+        }
+
+        /* ── NAVBAR ── */
+        nav {
+            position: fixed;
+            top: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 0.7rem 1.6rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            background: rgba(234, 230, 223, 0.5);
+            backdrop-filter: blur(0px);
+            transition: background 0.4s, backdrop-filter 0.4s;
+            white-space: nowrap;
+        }
+
+        nav.scrolled {
+            background: rgba(244, 241, 235, 0.88);
+            backdrop-filter: blur(20px);
+        }
+
+        .nav-brand {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.4rem;
+        }
+
+        .nav-links a {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--taupe);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        .nav-cta {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--surface);
+            background: var(--terra);
+            padding: 0.45rem 1rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .nav-cta:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+        }
+
+        @media(max-width:768px) {
+            .nav-links {
+                display: none;
+            }
+
+            nav {
+                gap: 0.8rem;
+                padding: 0.6rem 1.1rem;
+            }
+        }
+
+        /* ── HERO ── */
+        #hero {
+            position: relative;
+            height: 100dvh;
+            min-height: 600px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+
+        #hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('images/hero_workshop.png') 50% 55%/cover no-repeat;
+            will-change: transform;
+        }
+
+        #hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(28, 27, 26, 0.08) 0%,
+                    rgba(28, 27, 26, 0.25) 40%,
+                    rgba(234, 230, 223, 0.55) 72%,
+                    rgba(234, 230, 223, 1) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 clamp(1.5rem, 5vw, 6rem) clamp(3rem, 7vh, 6rem);
+            max-width: 820px;
+        }
+
+        .hero-overline {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--oak);
+            margin-bottom: 1rem;
+        }
+
+        .hero-h1 {
+            line-height: 1;
+            margin-bottom: 1.4rem;
+        }
+
+        .hero-h1 .line1 {
+            display: block;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.8rem, 4vw, 4.5rem);
+            color: var(--ink);
+            letter-spacing: -0.03em;
+            overflow: hidden;
+        }
+
+        .hero-h1 .line1 span {
+            display: block;
+        }
+
+        .hero-h1 .line2 {
+            display: block;
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(3rem, 8vw, 9.5rem);
+            color: var(--ink);
+            letter-spacing: -0.04em;
+            line-height: 0.92;
+            overflow: hidden;
+        }
+
+        .hero-h1 .line2 span {
+            display: block;
+        }
+
+        .hero-sub {
+            font-size: clamp(0.85rem, 1.4vw, 1rem);
+            font-weight: 400;
+            color: var(--taupe);
+            line-height: 1.7;
+            max-width: 480px;
+            margin-bottom: 2rem;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--surface);
+            background: var(--terra);
+            padding: 0.85rem 1.7rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.87;
+            transform: scale(1.03);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink);
+            background: transparent;
+            border: 1.5px solid var(--ink);
+            padding: 0.85rem 1.7rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--ink);
+            color: var(--surface);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 1.8rem;
+            right: clamp(1.5rem, 5vw, 6rem);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--taupe);
+        }
+
+        .scroll-hint span {
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+            writing-mode: vertical-rl;
+        }
+
+        .scroll-hint i {
+            animation: bob 2s ease infinite;
+        }
+
+        @keyframes bob {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(5px)
+            }
+        }
+
+        /* ── SECTION BASE ── */
+        section {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pad {
+            padding: clamp(4rem, 9vh, 7rem) clamp(1.5rem, 5vw, 6rem);
+        }
+
+        .label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--terra);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(1.8rem, 4vw, 3.5rem);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .section-h2 em {
+            font-style: italic;
+            color: var(--terra);
+        }
+
+        /* ── TRUST BAR ── */
+        #trust {
+            background: var(--ink);
+            overflow: auto;
+            padding: 1rem clamp(1.5rem, 5vw, 6rem);
+        }
+
+        .trust-track {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            min-width: max-content;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+
+        .trust-item i {
+            font-size: 1.1rem;
+            color: var(--oak);
+        }
+
+        .trust-item span {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(244, 241, 235, 0.7);
+        }
+
+        /* ── PRODUCTS ── */
+        #products {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .products-header {
+            margin-bottom: 3rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .product-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .product-body {
+            padding: 1.4rem 1.5rem 1.6rem;
+        }
+
+        .product-tag {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--terra);
+            margin-bottom: 0.4rem;
+        }
+
+        .product-name {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.4rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.6rem;
+            line-height: 1.15;
+        }
+
+        .product-desc {
+            font-size: 0.8rem;
+            color: var(--taupe);
+            line-height: 1.65;
+            margin-bottom: 1rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .product-price {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.3rem;
+            color: var(--ink);
+        }
+
+        .product-cta {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--terra);
+            text-decoration: none;
+            border-bottom: 1px solid var(--terra);
+            transition: opacity 0.2s;
+        }
+
+        .product-cta:hover {
+            opacity: 0.7;
+        }
+
+        /* ── ABOUT ── */
+        #about {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media(max-width:768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .about-img-wrap {
+            border-radius: 2rem;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4/5;
+        }
+
+        .about-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+        }
+
+        .about-img-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(28, 27, 26, 0.2) 0%, transparent 40%);
+        }
+
+        .about-badge {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            z-index: 2;
+            background: rgba(244, 241, 235, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 0.6rem 1rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .about-badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--terra);
+            animation: pulse-dot 2s ease infinite;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1
+            }
+
+            50% {
+                transform: scale(1.6);
+                opacity: 0.6
+            }
+        }
+
+        .about-badge span {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .about-text {
+            max-width: 500px;
+        }
+
+        .about-text .section-h2 {
+            margin-bottom: 1.25rem;
+        }
+
+        .about-text p {
+            font-size: 0.88rem;
+            color: var(--taupe);
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .about-socials {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.55rem 1rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+            color: var(--surface);
+        }
+
+        .social-btn:hover {
+            opacity: 0.85;
+            transform: scale(1.04);
+        }
+
+        .social-btn.ig {
+            background: #C13584;
+        }
+
+        .social-btn.fb {
+            background: #1877F2;
+        }
+
+        .social-btn.li {
+            background: #0A66C2;
+        }
+
+        .social-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* ── GALLERY BAND ── */
+        #gallery {
+            border-top: 1px solid var(--border);
+        }
+
+        .gallery-scroll {
+            display: flex;
+            gap: 1px;
+            overflow: hidden;
+        }
+
+        .gallery-scroll div {
+            flex: 1 0 0;
+            min-width: 0;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .gallery-scroll img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease, filter 0.5s ease;
+            filter: grayscale(50%) sepia(15%) hue-rotate(345deg) contrast(1.05);
+        }
+
+        .gallery-scroll div:hover img {
+            transform: scale(1.06);
+            filter: grayscale(10%) sepia(10%) hue-rotate(345deg) contrast(1.02);
+        }
+
+        @media(max-width:640px) {
+            .gallery-scroll {
+                flex-wrap: wrap;
+            }
+
+            .gallery-scroll div {
+                flex: 0 0 50%;
+                height: 180px;
+            }
+        }
+
+        /* ── REVIEWS ── */
+        #reviews {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .review-links {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .review-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink);
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            padding: 0.45rem 0.9rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .review-link-btn:hover {
+            background: var(--ink);
+            color: var(--surface);
+            border-color: var(--ink);
+        }
+
+        .review-link-btn i {
+            font-size: 0.85rem;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .review-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .stars {
+            color: #D4952A;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        .review-text {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: 0.97rem;
+            line-height: 1.65;
+            color: var(--ink);
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .review-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--oak);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--surface);
+            flex-shrink: 0;
+        }
+
+        .review-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .review-date {
+            font-size: 0.62rem;
+            color: var(--taupe);
+        }
+
+        .review-platform {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--terra);
+        }
+
+        /* ── DOGS CTA BAND ── */
+        #dogs-band {
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+        }
+
+        #dogs-band-bg {
+            position: absolute;
+            inset: 0;
+            background: url('images/two_pups.png') center/cover no-repeat;
+        }
+
+        #dogs-band-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(28, 27, 26, 0.75) 0%, rgba(28, 27, 26, 0.35) 100%);
+        }
+
+        .dogs-band-content {
+            position: relative;
+            z-index: 1;
+            padding: 4rem clamp(1.5rem, 5vw, 6rem);
+            max-width: 700px;
+        }
+
+        .dogs-band-content .label {
+            color: var(--oak);
+        }
+
+        .dogs-band-content h2 {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            color: var(--surface);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .dogs-band-content h2 em {
+            color: var(--oak);
+            font-style: normal;
+        }
+
+        .dogs-band-content p {
+            font-size: 0.9rem;
+            color: rgba(244, 241, 235, 0.75);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        /* ── MARKETPLACE SECTION ── */
+        #marketplace {
+            background: var(--ink);
+        }
+
+        .marketplace-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media(max-width:768px) {
+            .marketplace-inner {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        .marketplace-text .label {
+            color: var(--oak);
+        }
+
+        .marketplace-text h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(1.8rem, 4vw, 3.5rem);
+            color: var(--surface);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .marketplace-text h2 em {
+            font-style: italic;
+            color: var(--oak);
+        }
+
+        .marketplace-text p {
+            font-size: 0.87rem;
+            color: rgba(244, 241, 235, 0.6);
+            line-height: 1.75;
+            margin-bottom: 1.5rem;
+        }
+
+        .marketplace-btns {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .mkt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.8rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .mkt-btn:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+        }
+
+        .mkt-btn.fb {
+            background: #1877F2;
+            color: #fff;
+        }
+
+        .mkt-btn.ig {
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: #fff;
+        }
+
+        .mkt-btn.li {
+            background: #0A66C2;
+            color: #fff;
+        }
+
+        .mkt-btn i {
+            font-size: 1rem;
+        }
+
+        .marketplace-img {
+            border-radius: 2rem;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+        }
+
+        .marketplace-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--ink);
+            border-top: 1px solid rgba(244, 241, 235, 0.06);
+            border-radius: 2.5rem 2.5rem 0 0;
+            padding: clamp(3rem, 7vh, 5rem) clamp(1.5rem, 5vw, 6rem) 2rem;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(244, 241, 235, 0.08);
+        }
+
+        @media(max-width:768px) {
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media(max-width:480px) {
+            .footer-top {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer-brand {
+            font-weight: 800;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--surface);
+            margin-bottom: 0.4rem;
+        }
+
+        .footer-tagline {
+            font-family: 'Instrument Serif', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--oak);
+            margin-bottom: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .footer-status {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--taupe);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--terra);
+            animation: pulse-dot 2s ease infinite;
+        }
+
+        .footer-col-label {
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--taupe);
+            opacity: 0.55;
+            margin-bottom: 0.9rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .footer-links a {
+            font-size: 0.78rem;
+            color: rgba(244, 241, 235, 0.55);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--surface);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .footer-copy {
+            font-size: 0.62rem;
+            color: rgba(244, 241, 235, 0.3);
+            letter-spacing: 0.05em;
+        }
+
+        /* ── UTILS ── */
+        .gsap-up {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════════════════
+     NAVBAR
+══════════════════════════ -->
+    <nav id="navbar">
+        <a href="#" class="nav-brand">Rivera Dog Beds</a>
+        <div class="nav-links">
+            <a href="#products">Beds</a>
+            <a href="#about">About</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#marketplace">Shop</a>
+        </div>
+        <a href="#marketplace" class="nav-cta">Order Now</a>
+    </nav>
+
+    <!-- ══════════════════════════
+     HERO
+══════════════════════════ -->
+    <section id="hero">
+        <div id="hero-bg" role="img" aria-label="Handcrafted wooden dog bed on workshop bench"></div>
+        <div class="hero-content">
+            <p class="hero-overline gsap-up">// New Orleans, Louisiana — Est. 2026 — Handbuilt to Order</p>
+            <h1 class="hero-h1">
+                <span class="line1"><span>Your dog deserves</span></span>
+                <span class="line2"><span>a real bed.</span></span>
+            </h1>
+            <p class="hero-sub gsap-up">
+                Solid wood frames built like baby cribs — by hand, to your dog's exact size. With a slim, comfortable
+                mattress included. Every piece made by Alejandro Rivera.
+            </p>
+            <div class="hero-ctas gsap-up">
+                <a href="#products" class="btn-primary">
+                    <i class="ph ph-arrow-down" aria-hidden="true"></i> See the Beds
+                </a>
+                <a href="#marketplace" class="btn-outline">
+                    <i class="ph-logo-facebook" class="ph" aria-hidden="true"></i> Find Us on Facebook
+                </a>
+            </div>
+        </div>
+        <div class="scroll-hint" aria-hidden="true">
+            <span>Scroll</span>
+            <i class="ph ph-caret-down"></i>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     TRUST BAR
+══════════════════════════ -->
+    <div id="trust" role="complementary">
+        <div class="trust-track">
+            <div class="trust-item"><i class="ph ph-tree"></i><span>Solid Hardwood Frame</span></div>
+            <div class="trust-item"><i class="ph ph-ruler"></i><span>Built to Your Dog's Size</span></div>
+            <div class="trust-item"><i class="ph ph-star"></i><span>5-Star Reviews</span></div>
+            <div class="trust-item"><i class="ph ph-package"></i><span>Mattress Included</span></div>
+            <div class="trust-item"><i class="ph ph-handshake"></i><span>Local Craftsman</span></div>
+            <div class="trust-item"><i class="ph ph-storefront"></i><span>Facebook Marketplace</span></div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════
+     PRODUCTS
+══════════════════════════ -->
+    <section id="products" class="pad">
+        <div class="products-header gsap-up">
+            <p class="label">The Collection</p>
+            <h2 class="section-h2">Built like a crib.<br>Slept in like a <em>dream.</em></h2>
+        </div>
+
+        <div class="product-grid">
+            <!-- Card 1 -->
+            <article class="product-card">
+                <img src="images/IMG_1914.jpg" alt="Rivera Classic crib-style wooden dog bed" loading="lazy" />
+                <div class="product-body">
+                    <p class="product-tag">Bestseller</p>
+                    <h3 class="product-name">The Rivera Classic</h3>
+                    <p class="product-desc">Our original design — four turned spindle posts, slatted base, matte clear
+                        coat. Fits medium to large breeds. Mattress pad included.</p>
+                    <div class="product-footer">
+                        <p class="product-price">From <strong>$185</strong></p>
+                        <a href="#marketplace" class="product-cta">Order on Facebook →</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="product-card">
+                <img src="images/IMG_1918.jpg" alt="Rivera Compact crib-style wooden dog bed for small dogs"
+                    loading="lazy" />
+                <div class="product-body">
+                    <p class="product-tag">For Small Breeds</p>
+                    <h3 class="product-name">The Compact Cradle</h3>
+                    <p class="product-desc">Every detail scaled down for smaller dogs — same heirloom joinery, same
+                        comfort, just sized for your little one. Mattress included.</p>
+                    <div class="product-footer">
+                        <p class="product-price">From <strong>$145</strong></p>
+                        <a href="#marketplace" class="product-cta">Order on Facebook →</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="product-card">
+                <img src="images/IMG_1919.jpg" alt="Rivera custom dog bed detail showing joinery" loading="lazy" />
+                <div class="product-body">
+                    <p class="product-tag">Fully Custom</p>
+                    <h3 class="product-name">Bespoke Commission</h3>
+                    <p class="product-desc">Send us your dog's measurements and your wood stain preference. We build it
+                        exactly to spec. Lead time 1–2 weeks.</p>
+                    <div class="product-footer">
+                        <p class="product-price">Upon Request</p>
+                        <a href="#marketplace" class="product-cta">Message Alejandro →</a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4 — AI image -->
+            <article class="product-card">
+                <img src="images/dog_in_bed.png"
+                    alt="Golden retriever sleeping in a handcrafted crib-style wooden dog bed" loading="lazy" />
+                <div class="product-body">
+                    <p class="product-tag">Most Popular</p>
+                    <h3 class="product-name">The Grand Crib</h3>
+                    <p class="product-desc">For the large-breed dog who takes up the whole couch anyway. Solid oak
+                        frame, raised off the floor, plush mattress top.</p>
+                    <div class="product-footer">
+                        <p class="product-price">From <strong>$245</strong></p>
+                        <a href="#marketplace" class="product-cta">Order on Facebook →</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     GALLERY BAND (real photos)
+══════════════════════════ -->
+    <div id="gallery" aria-label="Workshop and product gallery">
+        <div class="gallery-scroll">
+            <div><img src="images/IMG_1920.jpg" alt="Wooden dog bed frame detail" loading="lazy" /></div>
+            <div><img src="images/IMG_1921.jpg" alt="Dog bed in progress in workshop" loading="lazy" /></div>
+            <div><img src="images/IMG_1922.jpg" alt="Finished handcrafted dog bed" loading="lazy" /></div>
+            <div><img src="images/hero_workshop.png" alt="Workshop bench with finished dog bed" loading="lazy" /></div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════
+     ABOUT ALEJANDRO
+══════════════════════════ -->
+    <section id="about" class="pad">
+        <div class="about-grid">
+            <div class="about-img-wrap">
+                <img src="images/alejandro.png" alt="Alejandro Rivera, craftsman and founder of Rivera Custom Dog Beds"
+                    loading="lazy" />
+                <div class="about-badge">
+                    <span class="about-badge-dot" aria-hidden="true"></span>
+                    <span>Open for Orders</span>
+                </div>
+            </div>
+            <div class="about-text" id="about-text">
+                <p class="label">The Maker</p>
+                <h2 class="section-h2">Hi, I'm <em>Alejandro.</em></h2>
+                <p>I'm a woodworker based out of New Orleans who became obsessed with one question: why do we spend so
+                    much love on our dogs, but still put them on the floor?</p>
+                <p>Every Rivera dog bed is built entirely by hand in my shop — solid wood frame, mortise-and-tenon
+                    joints, finished with a food-safe oil so it's safe for the pups. The slim mattress pad fits snug
+                    inside the frame like a crib.</p>
+                <p>I started selling on Facebook Marketplace and Instagram, and the response has been incredible. Every
+                    bed is made one at a time, measured to your dog. This is a startup built on sawdust and love — I
+                    hope you'll be part of it.</p>
+                <p style="font-style:italic;color:var(--terra);font-family:'Instrument Serif',serif;font-size:1rem;">—
+                    Alejandro Rivera, Founder</p>
+                <div class="about-socials">
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="social-btn ig">
+                        <i class="ph ph-instagram-logo" aria-hidden="true"></i> Instagram
+                    </a>
+                    <a href="https://facebook.com/marketplace" target="_blank" rel="noopener" class="social-btn fb">
+                        <i class="ph ph-facebook-logo" aria-hidden="true"></i> Facebook
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-btn li">
+                        <i class="ph ph-linkedin-logo" aria-hidden="true"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     REVIEWS
+══════════════════════════ -->
+    <section id="reviews" class="pad">
+        <div class="reviews-header">
+            <div class="gsap-up">
+                <p class="label">Happy Customers</p>
+                <h2 class="section-h2">What people are <em>saying.</em></h2>
+            </div>
+            <div class="review-links gsap-up">
+                <a href="https://yelp.com" target="_blank" rel="noopener" class="review-link-btn">
+                    <i class="ph ph-star" aria-hidden="true"></i> Yelp
+                </a>
+                <a href="https://google.com/maps" target="_blank" rel="noopener" class="review-link-btn">
+                    <i class="ph ph-google-logo" aria-hidden="true"></i> Google
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noopener" class="review-link-btn">
+                    <i class="ph ph-facebook-logo" aria-hidden="true"></i> Facebook
+                </a>
+            </div>
+        </div>
+
+        <div class="reviews-grid">
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"Alejandro built a bed for my golden retriever, Biscuit. It looks incredible in
+                    our living room — literally better than most of our furniture. Biscuit won't leave it. 10/10 will
+                    order again for my second dog."</p>
+                <div class="review-author">
+                    <div class="review-avatar">MR</div>
+                    <div>
+                        <p class="review-name">Maria R.</p>
+                        <p class="review-date">January 2026</p>
+                        <p class="review-platform">Google Review</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"Found this on Facebook Marketplace and honestly didn't believe the price for how
+                    good it looks. It genuinely looks like an antique baby crib. My beagle Harold has never slept
+                    better. My wife wants one for herself."</p>
+                <div class="review-author">
+                    <div class="review-avatar" style="background:var(--terra)">TD</div>
+                    <div>
+                        <p class="review-name">Tyler D.</p>
+                        <p class="review-date">February 2026</p>
+                        <p class="review-platform">Facebook Marketplace</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"I ordered a custom size for my French bulldog. Alejandro was responsive,
+                    measured everything perfectly, and delivered on time. The finish is gorgeous — I'm obsessed. Worth
+                    every penny."</p>
+                <div class="review-author">
+                    <div class="review-avatar" style="background:var(--olive)">SP</div>
+                    <div>
+                        <p class="review-name">Sofia P.</p>
+                        <p class="review-date">February 2026</p>
+                        <p class="review-platform">Yelp Review</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"As a carpenter myself, I was skeptical — then I saw the joinery in person. This
+                    man knows what he's doing. The mortise and tenon joints are clean. Solid wood, not particle board.
+                    This bed will outlast my dog. That's saying something."</p>
+                <div class="review-author">
+                    <div class="review-avatar" style="background:#5a4a3a">JK</div>
+                    <div>
+                        <p class="review-name">James K.</p>
+                        <p class="review-date">January 2026</p>
+                        <p class="review-platform">Google Review</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"I gifted this to my sister for her dachshund, Oscar. She cried. The bed is
+                    beautiful, the mattress fits perfectly, and Oscar immediately claimed it as his own. Best gift I've
+                    ever given. Alejandro ships fast too."</p>
+                <div class="review-author">
+                    <div class="review-avatar" style="background:#8B5E3C">LC</div>
+                    <div>
+                        <p class="review-name">Laura C.</p>
+                        <p class="review-date">January 2026</p>
+                        <p class="review-platform">Instagram</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="review-card">
+                <div class="stars">★★★★★</div>
+                <p class="review-text">"My Labrador Retriever is 85 pounds and we were worried nothing would work.
+                    Alejandro took her measurements and built the Grand Crib in under two weeks. It fits perfectly. She
+                    sleeps in it every night. Absolute quality."</p>
+                <div class="review-author">
+                    <div class="review-avatar" style="background:#9E7253">BW</div>
+                    <div>
+                        <p class="review-name">Brandon W.</p>
+                        <p class="review-date">February 2026</p>
+                        <p class="review-platform">Yelp Review</p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     DOGS CTA BAND
+══════════════════════════ -->
+    <section id="dogs-band">
+        <div id="dogs-band-bg" role="img"
+            aria-label="A French bulldog and beagle sleeping in their handcrafted wooden dog beds"></div>
+        <div class="dogs-band-content">
+            <p class="label">For Every Dog, Every Breed</p>
+            <h2>Your dog has <em>earned</em> this.<br>Let's build their bed.</h2>
+            <p>From French bulldogs to Great Danes — every dog gets a frame built for their body. Send a message and
+                we'll get started.</p>
+            <div style="display:flex;gap:0.85rem;flex-wrap:wrap;">
+                <a href="#marketplace" class="btn-primary">Start Your Order</a>
+                <a href="#about" class="btn-outline"
+                    style="color:var(--surface);border-color:rgba(244,241,235,0.5);">Meet Alejandro</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     WHERE TO BUY
+══════════════════════════ -->
+    <section id="marketplace" class="pad">
+        <div class="marketplace-inner">
+            <div class="marketplace-text" id="marketplace-text">
+                <p class="label">Where to Shop</p>
+                <h2>Find us on <em>Facebook Marketplace</em> &amp; Instagram.</h2>
+                <p>We're a small, local business and we keep it simple. Browse current inventory on Facebook
+                    Marketplace, or DM us on Instagram to discuss a custom build. We respond fast.</p>
+                <p>You can also reach us through LinkedIn if you're a business looking to carry our beds or partner with
+                    us.</p>
+                <div class="marketplace-btns">
+                    <a href="https://facebook.com/marketplace" target="_blank" rel="noopener" class="mkt-btn fb">
+                        <i class="ph ph-facebook-logo" aria-hidden="true"></i> Facebook Marketplace
+                    </a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" class="mkt-btn ig">
+                        <i class="ph ph-instagram-logo" aria-hidden="true"></i> Instagram
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener" class="mkt-btn li">
+                        <i class="ph ph-linkedin-logo" aria-hidden="true"></i> LinkedIn
+                    </a>
+                </div>
+            </div>
+            <div class="marketplace-img gsap-up">
+                <img src="images/hero_workshop.png" alt="Alejandro's workshop with a finished dog bed frame"
+                    loading="lazy" />
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════════════════════
+     FOOTER
+══════════════════════════ -->
+    <footer>
+        <div class="footer-top">
+            <div>
+                <p class="footer-brand">Rivera Dog Beds</p>
+                <p class="footer-tagline">Handcrafted repose for the dog<br>who deserves a real bed.</p>
+                <div class="footer-status">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    Now Taking Orders · Ships in 1–2 Weeks
+                </div>
+            </div>
+            <div>
+                <p class="footer-col-label">Shop</p>
+                <ul class="footer-links">
+                    <li><a href="#products">The Classic</a></li>
+                    <li><a href="#products">The Compact Cradle</a></li>
+                    <li><a href="#products">The Grand Crib</a></li>
+                    <li><a href="#products">Custom Orders</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-col-label">Connect</p>
+                <ul class="footer-links">
+                    <li><a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href="https://facebook.com/marketplace" target="_blank" rel="noopener">Facebook
+                            Marketplace</a></li>
+                    <li><a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a></li>
+                    <li><a href="https://yelp.com" target="_blank" rel="noopener">Yelp Reviews</a></li>
+                </ul>
+            </div>
+            <div>
+                <p class="footer-col-label">About</p>
+                <ul class="footer-links">
+                    <li><a href="#about">Meet Alejandro</a></li>
+                    <li><a href="#reviews">Customer Reviews</a></li>
+                    <li><a href="mailto:hello@riveradogbeds.com">hello@riveradogbeds.com</a></li>
+                    <li><a href="#">New Orleans, LA</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copy">© 2026 Rivera Custom Dog Beds — Built by hand. Slept in with love.</p>
+            <p class="footer-copy"
+                style="font-family:'Instrument Serif',serif;font-style:italic;font-size:0.78rem;opacity:0.45;">New
+                Orleans, Louisiana</p>
+        </div>
+    </footer>
+
+    <!-- ══════════════════════════
+     JAVASCRIPT
+══════════════════════════ -->
+    <script>
+        (function () {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Navbar morph
+            const nav = document.getElementById('navbar');
+            ScrollTrigger.create({
+                start: 'top+=80',
+                onEnter() { nav.classList.add('scrolled'); },
+                onLeaveBack() { nav.classList.remove('scrolled'); }
+            });
+
+            // Hero parallax
+            gsap.to('#hero-bg', {
+                yPercent: 18, ease: 'none',
+                scrollTrigger: { trigger: '#hero', scrub: true }
+            });
+
+            // Hero text reveal
+            const line1 = document.querySelector('.hero-h1 .line1 span');
+            const line2 = document.querySelector('.hero-h1 .line2 span');
+            if (line1) { gsap.from(line1, { yPercent: 110, duration: 1.1, ease: 'expo.out', delay: 0.25 }); }
+            if (line2) { gsap.from(line2, { yPercent: 110, duration: 1.1, ease: 'expo.out', delay: 0.4 }); }
+            gsap.from('.hero-overline', { opacity: 0, y: 20, duration: 0.9, ease: 'power3.out', delay: 0.1 });
+            gsap.from('.hero-sub', { opacity: 0, y: 28, duration: 1, ease: 'power3.out', delay: 0.65 });
+            gsap.from('.hero-ctas', { opacity: 0, y: 25, duration: 1, ease: 'power3.out', delay: 0.85 });
+
+            // Product cards
+            gsap.utils.toArray('.product-card').forEach((card, i) => {
+                gsap.to(card, {
+                    opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', delay: i * 0.1,
+                    scrollTrigger: { trigger: '.product-grid', start: 'top 88%', once: true }
+                });
+            });
+
+            // Generic gsap-up elements
+            gsap.utils.toArray('.gsap-up').forEach(el => {
+                // skip hero elements handled above
+                if (el.closest('#hero')) return;
+                gsap.from(el, {
+                    opacity: 0, y: 35, duration: 0.9, ease: 'power3.out',
+                    scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+                });
+            });
+
+            // Review cards stagger
+            gsap.utils.toArray('.review-card').forEach((card, i) => {
+                gsap.from(card, {
+                    opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', delay: i * 0.07,
+                    scrollTrigger: { trigger: '.reviews-grid', start: 'top 85%', once: true }
+                });
+            });
+
+            // Gallery images
+            gsap.utils.toArray('.gallery-scroll img').forEach((img, i) => {
+                gsap.from(img, {
+                    scale: 1.08, duration: 1.2, ease: 'power2.out',
+                    scrollTrigger: { trigger: img, start: 'top 90%', once: true }
+                });
+            });
+
+            // About img
+            gsap.from('.about-img-wrap', {
+                opacity: 0, x: -30, duration: 1.1, ease: 'power3.out',
+                scrollTrigger: { trigger: '#about', start: 'top 80%', once: true }
+            });
+
+            // About text (explicit fromTo so it's never stuck invisible)
+            gsap.fromTo('#about-text',
+                { opacity: 0, x: 30 },
+                {
+                    opacity: 1, x: 0, duration: 1.1, ease: 'power3.out',
+                    scrollTrigger: { trigger: '#about', start: 'top 80%', once: true }
+                }
+            );
+
+            // Marketplace text
+            gsap.fromTo('#marketplace-text',
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1, y: 0, duration: 1.0, ease: 'power3.out',
+                    scrollTrigger: { trigger: '#marketplace', start: 'top 85%', once: true }
+                }
+            );
+
+        })();
+    </script>
+</body>
+
+</html>
